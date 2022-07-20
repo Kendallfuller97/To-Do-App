@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <button id = "toggle-all-button">Toggle All</button>
+    <button id = "add-button">Add</button>
+    <input id = "add-input">
+
+    <!-- <button id = "edit-button"> Edit </button> -->
+    <!-- <input id = "edit-position-input"> -->
+    <!-- <input id = "edit-text-input"> -->
+
+    <!-- <button id = "toggle-button">Toggle</button> -->
+    <!-- <input id = "toggle-input"> -->
+
+    <ul id = "todos-ul">
+        
+    </ul>
+
+    
+    <script>
+        let todos = [
+            {todoText: 'item 1', complete: false }, 
+            {todoText: 'item 2', complete: false }, 
+            {todoText: 'item 3', complete: false }
+        ]
+
+        displayTodos();
+
+        function displayTodos(){
+            for(let i = 0; i < todos.length; i++){
+                console.log(todos[i])
+            }
+            let todosUl = document.getElementById('todos-ul');
+            todosUl.innerHTML="";
+            for (let i = 0; i < todos.length; i++){
+                let todoLi = document.createElement('li');
+                if (todos[i].complete === true){
+                    todoLi.innerText = '[X] ' + todos[i].todoText
+                }
+                else{
+                    todoLi.innerText = '[ ] ' + todos[i].todoText
+                }
+                //v10 delete button
+                let removeButton = document.createElement('button');
+                removeButton.innerText = 'Remove';
+                removeButton.addEventListener('click', remove);
+                removeButton.id = 'remove-' + i;
+
+                // v11 toggle
+                let toggleButton = document.createElement('button');
+                toggleButton.innerText = 'Toggle';
+                toggleButton.addEventListener('click', toggle);
+                toggleButton.id = 'toggle-' + i;
+
+                //v12 edit button
+                let editButton = document.createElement('button');
+                editButton.innerText = 'Edit';
+                editButton.addEventListener('click', edit);
+                editButton.id = 'edit-' + i ;
+
+                todoLi.appendChild(toggleButton);
+                todoLi.appendChild(removeButton);
+                todoLi.appendChild(editButton);
+                todosUl.appendChild(todoLi);
+            }
+        }
+
+        function add(){
+            let initialTodoText = addInput.value
+            todos.push({todoText: initialTodoText, complete: false})
+            addInput.value = ""
+            displayTodos();
+        }
+
+        function edit(){
+            // CHALLENGE: fix the ok button and the cancel button bug
+            //check if the newTodoText is null
+                //if it is null, do nothing
+            //check if the newTodoText is empty ""
+                // if empty, do nothing
+            //else
+                //update the data
+            let newTodoText = prompt("enter your edited item");
+                if(newTodoText === null){
+                    //do nothing
+                }
+                else{
+                    if(newTodoText === ''){
+                        //do nothing
+                    }
+                    else{
+                        //update the data
+                        let position = event.target.id.split('-')[1];
+                        todos[position].todoText = newTodoText;
+                        displayTodos();
+                    }
+                }
+        }
+
+       function toggle(event){
+            //we want a unique id 
+            // toggle-i
+            // toggle-0
+            // toggle-254
+           let position = event.target.id.split('-')[1];
+           //event.target.id => 'toggle-0'
+           //'toggle-0'.split('-') => ['toggle' , '0']
+            //['toggle', '0'][1] => '0'
+            if(todos[position].complete === false){
+                todos[position].complete = true;
+            }
+            else{
+                todos[position].complete = false;
+            }
+            displayTodos();
+        }
+         
+        function remove(event){
+            let position = event.target.id.split('-')[1];
+            todos.splice(position, 1)
+            displayTodos();
+        }
+
+        function toggleAll(){
+           let completedTodos = 0;
+
+           for (let i = 0; i < todos.length; i++){
+               if(todos[i].complete === true){
+                   completedTodos++;
+               }
+            }
+           
+           if (completedTodos === todos.length){
+               for (let i = 0; i < todos.length; i++){
+                   todos[i].complete = false;
+               }
+           } else {
+               for(let i = 0; i < todos.length; i++){
+                   todos[i].complete = true;
+               }
+           }
+           displayTodos()
+        }
+
+
+        let toggleAllButton = document.getElementById('toggle-all-button');
+        toggleAllButton.addEventListener("click", toggleAll)
+
+        let addButton = document.getElementById('add-button');
+        let addInput = document.getElementById('add-input');
+        addButton.addEventListener('click', add);
+
+        // let editButton = document.getElementById('edit-button');
+        // let editPositionInput = document.getElementById('edit-position-input');
+        // let editTextInput = document.getElementById('edit-text-input');
+        // editButton.addEventListener('click', edit)
+
+        // let toggleButton = document.getElementById('toggle-button');
+        // let toggleInput = document.getElementById('toggle-input');
+
+    </script>
+</body>
+</html>
